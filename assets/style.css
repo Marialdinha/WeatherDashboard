@@ -1,3 +1,8 @@
+:root{
+  --body_back_color:#f6f9ef;
+  --header_back_color:#aeb79b;
+  --margin_size:10px;
+}
 
 html,
 body {
@@ -8,14 +13,74 @@ body {
 
 body {
   font-family: sans-serif;
-  /* background-color: #717962; */
-  background-color: #717962;
+  background-color: var(--body_back_color);
 }
 
 header {
     text-align: center;
     padding: 20px;
-    padding-top: 0px;
-    margin: ;
-    color: whitesmoke;
+    margin: var(--margin_size);
+    width: 95%;
+    color: white;
+    background-color: var(--header_back_color);
+  }
+
+  .main-section{
+    display: flex;
+    padding: 5px;
+    margin: var(--margin_size);
+    width: 96.5%;
+    border: 5px solid var(--header_back_color);;
+  }
+
+  #city-section{
+    flex: 20%;
+    margin: var(--margin_size);
+    height: 400px;
+  }
+
+  #city-label {
+    width: 100%;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  #city{
+    width: 97%;
+    height: 30px;
+  }
+
+  #search{
+    width: 100%;
+    height: 35px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  #weather-section{
+    flex: 80%;
+    margin: var(--margin_size);
+  }
+
+  #city-display{
+    margin: var(--margin_size);
+    height: auto;
+  }
+
+  #current-weather{
+    margin: var(--margin_size);
+    border: 5px solid var(--header_back_color);;
+    height: 180px;
+    padding-left: 10px;
+  }
+
+  #weather-5days{
+    margin: var(--margin_size);
+    height: 200px;
+    padding-left: 10px;
+  }
+
+  #all-5-days{
+    display: flex;
   }

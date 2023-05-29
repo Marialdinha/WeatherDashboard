@@ -16,13 +16,29 @@
         </header>
 
         <main>
-            <section>
+            <div class="main-section">
+                <section id="city-section">
+                    <p id="city-search"></p>
+                    <label id="city-label" for="city">Search for a City:</label><br><br>
+                    <input type="text" id="city" name="city-input"><br><br>
+                    <button id="search" class="btn">Search</button>
+                    <div  id="city-display"></div>
+                </section>
 
-            </section>
-            
-            <aside>
-
-            </aside>
+                <aside id="weather-section">
+                    <div  id="current-weather">
+                        <h3>City Name</h3>
+                        <p>Temp: </p>
+                        <p>Wind: </p>
+                        <p>Humidity: </p>
+                    </div>
+                    <div id="weather-5days">
+                    <h3>5-Day Forecast</h3>
+                    <section id="all-5-days">
+                    </section>
+                </div>
+                </aside>
+            </div>
         </main>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
