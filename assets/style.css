@@ -1,9 +1,9 @@
-:root{
+ :root{
   --body_back_color:#f6f9ef;
   --header_back_color:#aeb79b;
   --margin_size:10px;
 }
-
+  
 html,
 body {
   height: 100%;
@@ -30,7 +30,7 @@ header {
     padding: 5px;
     margin: var(--margin_size);
     width: 96.5%;
-    border: 5px solid var(--header_back_color);;
+    border: 5px solid var(--header_back_color);
   }
 
   #city-section{
@@ -46,9 +46,13 @@ header {
     font-weight: 700;
   }
 
-  #city{
+  #city-to-search{
     width: 97%;
     height: 30px;
+  }
+
+  #enter-city{
+    font-size: 10px;
   }
 
   #search{
