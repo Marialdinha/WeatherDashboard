@@ -85,6 +85,15 @@ header {
     padding-left: 10px;
   }
 
-  #all-5-days{
+  .all-days{
     display: flex;
+    margin: var(--margin_size);
+    /* border: 5px solid var(--header_back_color); */
+  }
+
+  .each-5-days{
+    /* border: 5px solid var(--header_back_color); */
+    display: block;
+    width: 20%;
+    padding: 5px;
   }
