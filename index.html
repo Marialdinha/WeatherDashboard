@@ -22,18 +22,18 @@
                     <label id="city-label" for="city-to-search">Search for a City:</label><br><br>
                     <input type="text" id="city-to-search" name="city-input"><br><br>
                     <button id="search" class="btn">Search</button>
-                    <p hidden id="enter-city">Please, enter a city name to be searched</p>
-                    <div id="city-display" class="px-3">
-                        <p>TEST TEST TEST</p>
+                    <div id="city-display">
                     </div>
                 </section>
 
                 <aside id="weather-section">
                     <div id="current-weather">
-                        <h3>City Name</h3>
-                        <p>Temp: </p>
-                        <p>Wind: </p>
-                        <p>Humidity: </p>
+                        <h3 ><span id="curent-city-name">City</span>
+                            <span id="curent-date"></span> 
+                            <span id="curent-weather-pic"></span></h3>
+                        <p >Temp:&nbsp<span id="curent-Temp"></span></p>
+                        <p >Wind:&nbsp<span id="curent-Wind"></span></p>
+                        <p >Humidity:&nbsp<span id="curent-Humidity"></span></p>
                     </div>
                     <div id="weather-5days">
                         <h3>5-Day Forecast</h3>
