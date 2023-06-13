@@ -4,21 +4,28 @@ var cityToSearch = $("#city-to-search");
 var enterCity =  $("#enter-city");
 var cityDisplay = $("#city-display");
 var currentCityName = $("#curent-city-name");
+var curretDate = $("#curent-date");
+var curretIcon = $("#curent-icon");
 var currentTemp = $("#curent-Temp");
 var currentWind = $("#curent-Wind");
 var currentHumidity = $("#curent-Humidity");
-var all5DaysWeather = $("#all-5-days");
+var allDaysWeather = $("#all-5-days");
+var forecast = $("#forecast");
 var apiKey = "c78deab59c2355453ce985b6f36c6f2d";
 var requestedCity;
 var cityKey;
+var stausResponse;
+var date5Days;
 
 
 //Initialization
 function init(){
     cityDisplay.hide();
+    forecast.hide();
     cityToSearch.text = "";
     requestedCity = "";
-    all5DaysWeather.hide();
+    stausResponse="";
+    allDaysWeather.hide();
     retrieveCityHistory()
 }
 
@@ -37,29 +44,25 @@ async function cityWeather(){
 
     // checking if NO city was entered
     if (requestedCity === null || requestedCity === ""){
-        setTimeOutCity("Please, enter a city name to be searched")
+        setTimeOutCity("Please, enter a city name")
     }else{
 
         // getting current weather info
         // waiting for API call to finalize
-        await retrieveCurrentWeather().then((response) => { 
-            if (response  === "successful") { 
-                // saving city if weather was retrieved correctly
-                saveCityHistory();  
-                retrieveCityHistory();        
-            }
+        await retrieveCurrentWeather().then(() => { 
         }) 
-        saveCityHistory();    // <-- this needs to be removed after response is fixed
-        retrieveCityHistory(); // <-- this needs to be removed after response is fixed
 
-        await retrieve5DaysWeather().then((response) => { 
-            if (response  === "successful") { 
-                // do nothing for now
-                   return;
-            }
-        }) 
-    }
-       
+        if (stausResponse  === "successful") { 
+            // saving city if weather was retrieved correctly
+            saveCityHistory();  
+            retrieveCityHistory();     
+
+            // getting current weather info
+            // waiting for API call to finalize                             
+            await retrieve5DaysWeather().then(() => { 
+            }) 
+        }
+    }    
 }
 
 
@@ -71,29 +74,30 @@ function setTimeOutCity(message){
         cityToSearch.val("");
         btnSearch.prop("disabled",false);
     }, 1500);
-
 }
 
 
 // API call for current weather
 async function retrieveCurrentWeather(){
+    stausResponse="";
     const apiCurrentWeather = "https://api.openweathermap.org/data/2.5/weather?q=" + requestedCity + "&units=imperial&appid=" + apiKey ;
     await fetch(apiCurrentWeather).then(function (response) {
     if (response.ok) {
+        stausResponse="successful";
         response.json().then(function (data) {
+            console.log(data);
             currentCityName.text(data.name);
-            currentTemp.text(data.main.temp);
-            currentWind.text(data.wind.deg);
-            currentHumidity.text(data.main.humidity);
-            return("successful");
+            var dateConverted = convertDate(data.dt);
+            curretDate.text(dateConverted);
+            currentTemp.text(data.main.temp + " F");
+            currentWind.text(data.wind.deg +" MPH");
+            currentHumidity.text(data.main.humidity + "%"); 
         })
     } else {
         setTimeOutCity("City " + requestedCity + " does not exist")
-        return("unsuccessful");
     }
       });
  }
-
 
 
 // API call for 5 days weather
@@ -102,30 +106,38 @@ async function retrieveCurrentWeather(){
     await fetch(api5DaysWeather).then(function (response) {
         if (response.ok) {
             response.json().then(function (data) {
-            all5DaysWeather.empty();
-            all5DaysWeather.show();
-            console.log(data);
-         
-
-            
-            for(index = 0; index < 5; index++){
-                console.log(data[index]);
-                all5DaysWeather.append(`<div>`);
-                all5DaysWeather.append(`<section class="each-5-days">`);
-                all5DaysWeather.append(`<p>Temp:&nbsp${data.list[index].main.temp}</p>`); 
-                all5DaysWeather.append(`<o>Wind:&nbsp${data.list[index].wind.deg}</p>`); 
-                all5DaysWeather.append(`<p>Humidity:&nbsp${data.list[index].wind.humidity}</p>`); 
-                all5DaysWeather.append(`</section>`);
-                all5DaysWeather.append(`</div>`);
-                }
-               
-                console.log(all5DaysWeather); 
-
-                return("successful");
-            })
-        } 
-});
+                allDaysWeather.empty();
+                allDaysWeather.show();
+                forecast.show();
+                console.log(data);
+              
+            var html = ""    
+            var dateConverted = new Date();
+            for(index = 0; index < 40; index+=8){
+                html += `<section class="weather-card" >`;
+                dateConverted = convertDate(data.list[index].dt);
+                html += `<p class="weather-card__label">${dateConverted}</p>`;
+                html += `<p class="weather-card__item">Max Temp: <spam>${data.list[index].main.temp_max} F</spam></p>`;
+                html += `<p class="weather-card__item">Min Temp: ${data.list[index].main.temp_min} F</p>`;
+                html += `<p class="weather-card__item">Wind: ${data.list[index].wind.deg} MPH</p>`;
+                html += `<p class="weather-card__item">Humidity: ${data.list[index].main.humidity}%</p>`;
+                html += `</section>`
+            }
+            allDaysWeather.append(html);
+        })
+    }
+ })
 }
+
+
+// Converting the "funny" date into a normal date 
+function convertDate(dateIn){
+    var dateToConvert = new Date(0);
+    dateToConvert.setUTCSeconds(dateIn);
+    dateToConvert = (dateToConvert.getMonth() +1) + "/" + dateToConvert.getDate()  + "/" + dateToConvert.getFullYear(); 
+    return dateToConvert;
+}
+
 
  // Function to capitalize the first letter of a string
 function capitalizeFirstLetter(string){
@@ -133,19 +145,21 @@ function capitalizeFirstLetter(string){
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
 }
 
+
 // saving requested cities in local storage
 function saveCityHistory(){
     // setting city in local storage
-
     if (localStorage.getItem(requestedCity) === null){
         // setting limit to hto the number of cities stored 
-        if (localStorage.length > 2) {
-            cityKey = localStorage.key(localStorage.length -1);
+        if (localStorage.length > 7) {
+            // cityKey = localStorage.key(localStorage.length -1);
+            cityKey = localStorage.key(0);
             localStorage.removeItem(cityKey); 
         }
         localStorage.setItem(requestedCity, requestedCity);
     }
 }
+
 
 // initialize city's history from local storage
 function retrieveCityHistory(){
@@ -157,7 +171,7 @@ function retrieveCityHistory(){
         // initializing buttons with cities from local storage 
         for(index = 0; index < localStorage.length; index++){
         cityKey = localStorage.key(index);
-        cityDisplay.append(`<button id="${cityKey}" class="btn">${cityKey}</button>\n`);
+        cityDisplay.append(`<button id="${cityKey}" class="btn">${cityKey}</button><br/>`);
         }
 
         //add event lsitner to all city buttons
@@ -170,6 +184,7 @@ function retrieveCityHistory(){
       })
     }
 }
+
 
 // When document is ready, initialize functions
 $(document).ready(function(){
